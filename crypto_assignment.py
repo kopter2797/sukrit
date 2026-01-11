@@ -1,3 +1,6 @@
+import hmac
+import hashlib
+
 class VigenereCipher:
     # คลาสสำหรับ Vigenere Cipher: เป็นเหมือนเครื่องมือเข้ารหัสลับ
     
@@ -164,6 +167,41 @@ class AutokeyCipher:
         # ส่งคืนข้อความต้นฉบับที่สมบูรณ์
 
 
+class SecureDataIntegrity:
+    # คลาสใหม่: ระบบรักษาความปลอดภัยข้อมูล (ป้องกันการแก้ไข)
+    # ใช้หลักการ HMAC (Hash-based Message Authentication Code)
+    
+    def __init__(self, secret_key):
+        # กุญแจลับสำหรับเซ็นชื่อ (ต้องเก็บไว้เป็นความลับห้ามบอกใคร)
+        self.secret_key = secret_key.encode('utf-8')
+
+    def sign_data(self, data):
+        # สร้างลายเซ็นดิจิทัล (Signature)
+        # เปรียบเหมือนการประทับตราครั่งลงบนจดหมาย ถ้าใครแกะอ่านหรือแก้เนื้อหา ตราจะแตก
+        data_bytes = data.encode('utf-8')
+        signature = hmac.new(self.secret_key, data_bytes, hashlib.sha256).hexdigest()
+        
+        # ส่งกลับข้อมูลพร้อมลายเซ็น (คั่นด้วย |)
+        return f"{data}|{signature}"
+
+    def verify_data(self, signed_data):
+        # ตรวจสอบความถูกต้อง (Verify)
+        try:
+            # แยกเนื้อหา กับ ลายเซ็น ออกจากกัน
+            data, received_signature = signed_data.split('|')
+            
+            # คำนวณลายเซ็นใหม่จากเนื้อหาที่ได้รับ
+            expected_signature = hmac.new(self.secret_key, data.encode('utf-8'), hashlib.sha256).hexdigest()
+            
+            # เทียบกันว่าตรงไหม (ใช้ compare_digest เพื่อความปลอดภัยสูงสุด กันการจับเวลา)
+            if hmac.compare_digest(received_signature, expected_signature):
+                return True, data # ผ่าน! ของแท้แน่นอน
+            else:
+                return False, None # ไม่ผ่าน! มีคนแอบแก้ข้อมูล
+        except ValueError:
+            return False, None # รูปแบบข้อมูลผิดพลาด
+
+
 def preprocess_text(text):
     # ฟังก์ชันผู้ช่วย: คัดกรองเฉพาะคนหน้าตาดี (A-Z) เข้างาน
     
@@ -183,53 +221,64 @@ def preprocess_text(text):
     # ส่งคนที่ผ่านการคัดเลือกกลับไปใช้งาน
 
 
-# พื้นที่ทดสอบการทำงาน (Main Playground)
 if __name__ == "__main__":
     # ตรวจสอบว่ากำลังรันไฟล์นี้โดยตรงใช่ไหม
     
-    print("--- แบบฝึกหัดถอดรหัสลับ (Cryptography Assignment) ---")
+    print("--- แบบฝึกหัดถอดรหัสลับ + ระบบความปลอดภัย (Secure Crypto) ---")
     
     # ข้อมูลสมมติสำหรับทดสอบ
     original_text = "ATTACK AT DAWN"
-    # ข้อความลับ: "บุกตอนรุ่งสาง"
-    
     keyword = "LEMON"
-    # รหัสผ่าน: "LEMON"
-    
+    secret_key = "MY_TOP_SECRET_KEY" # กุญแจสำหรับตรวจสอบความถูกต้อง (HMAC Key)
+
     print(f"ข้อความเดิม: {original_text}")
-    print(f"รหัสผ่าน:    {keyword}")
+    print(f"รหัสผ่านเข้ารหัส: {keyword}")
+    print(f"กุญแจกันแก้ไข:   {secret_key}")
     print("-" * 30)
 
-    # 1. ลองเล่น Vigenere
-    v_cipher = VigenereCipher(keyword)
-    v_encrypted = v_cipher.encrypt(original_text)
-    v_decrypted = v_cipher.decrypt(v_encrypted)
-    
-    print("ผลลัพธ์ Vigenere Cipher:")
-    print(f"เข้ารหัสแล้ว: {v_encrypted}")
-    print(f"ถอดรหัสกลับ: {v_decrypted}")
-    print("-" * 30)
-
-    # 2. ลองเล่น Autokey
+    # 1. เข้ารหัสด้วย Autokey (เหมือนเดิม)
     a_cipher = AutokeyCipher(keyword)
-    a_encrypted = a_cipher.encrypt(original_text)
-    a_decrypted = a_cipher.decrypt(a_encrypted)
-    
-    print("ผลลัพธ์ Autokey Cipher (ปลอดภัยกว่า):")
-    print(f"เข้ารหัสแล้ว: {a_encrypted}")
-    print(f"ถอดรหัสกลับ: {a_decrypted}")
+    encrypted_text = a_cipher.encrypt(original_text)
+    print(f"[ขั้นตอน 1] เข้ารหัสลับเสร็จแล้ว: {encrypted_text}")
+
+    # 2. เพิ่มความปลอดภัยด้วยการเซ็นชื่อ (HMAC)
+    security = SecureDataIntegrity(secret_key)
+    signed_encrypted_text = security.sign_data(encrypted_text)
+    print(f"[ขั้นตอน 2] ประทับตรากันปลอมแปลง: {signed_encrypted_text}")
     print("-" * 30)
 
-    # เรื่องน่ารู้: ทำไม Autokey ถึงเก่งกว่า?
-    print("\nทำไม Autokey ถึงเจ๋งกว่า Vigenere?")
+    # 3. จำลองสถานการณ์: ส่งข้อมูลไปปลายทาง (แบบปกติ)
+    print(">>> กำลังส่งข้อมูลไปปลายทาง... (ไม่มีใครแอบแก้)")
+    is_valid, verified_data = security.verify_data(signed_encrypted_text)
     
-    explanation = """
-    1. Vigenere ใช้กุญแจเดิมวนซ้ำไปเรื่อยๆ (เช่น LEMONLEMON...)
-       ถ้าโจรจับทางได้ว่ากุญแจยาว 5 ตัวอักษร ก็เสร็จโจรเลย! (เข้าทาง Kasiski method)
+    if is_valid:
+        decrypted_text = a_cipher.decrypt(verified_data)
+        print(f"✅ ตรวจสอบผ่าน! ข้อมูลถูกต้อง")
+        print(f"   ถอดรหัสได้ว่า: {decrypted_text}")
+    else:
+        print(f"❌ อันตราย! ข้อมูลถูกแก้ไข อย่าเชื่อถือ!")
+
+    print("-" * 30)
+
+    # 4. จำลองสถานการณ์: มีแฮกเกอร์แอบแก้ข้อมูล!
+    print(">>> มีแฮกเกอร์แอบดักจับข้อมูลแล้วเปลี่ยนข้างใน! <<<")
     
-    2. Autokey ฉลาดกว่า เพราะใช้กุญแจแค่รอบแรก
-       รอบต่อไปมันเอา "ข้อความของเราเอง" มาทำเป็นกุญแจ
-       ทำให้กุญแจเปลี่ยนรหัสไปเรื่อยๆ ไม่มีรูปแบบซ้ำๆ ให้โจรจับทางได้ง่ายๆ ครับ
-    """
+    # แฮกเกอร์แก้รหัสลับตัวนึง (เช่น เปลี่ยนตัวแรก)
+    hacked_data_parts = signed_encrypted_text.split('|')
+    fake_cipher = "X" + hacked_data_parts[0][1:] # เปลี่ยนตัวแรกเป็น X
+    hacked_signed_text = f"{fake_cipher}|{hacked_data_parts[1]}" # ประกอบร่างคืน
     
-    print(explanation)
+    print(f"ข้อมูลที่แฮกเกอร์แก้แล้ว: {hacked_signed_text}")
+    
+    is_valid, verified_data = security.verify_data(hacked_signed_text)
+    
+    if is_valid:
+         # ถ้าเข้ามาในนี้ได้ แปลว่าระบบเราห่วย
+        decrypted_text = a_cipher.decrypt(verified_data)
+        print(f"✅ ตรวจสอบผ่าน (เป็นไปไม่ได้)")
+    else:
+        # ระบบต้องมาตกตรงนี้
+        print(f"❌ ตรวจพบการปลอมแปลง! (Tampering Detected)")
+        print(f"   ระบบปฏิเสธการถอดรหัส เพราะ Signature ไม่ตรงกับเนื้อหา")
+
+    print("-" * 30)

@@ -101,6 +101,43 @@
           </div>
         </div>
 
+        <!-- Security Section -->
+        <!-- Security Section -->
+        <div class="security-section">
+          <div class="security-header">
+            <label for="use-security" class="security-label">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2L3 7V12C3 17.52 7.73 22 12 22C16.27 22 21 17.52 21 12V7L12 2ZM12 11.99H7V10H12V7.5L16 11L12 14.5V11.99Z"
+                  fill="currentColor"
+                />
+              </svg>
+              เปิดใช้ระบบความปลอดภัย (Auto Integrity Check)
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="use-security" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p
+            style="
+              color: var(--text-muted);
+              font-size: 0.85rem;
+              margin: 0;
+              padding-left: 2px;
+            "
+          >
+            เพิ่มการตรวจสอบความถูกต้องของข้อมูลด้วย HMAC
+            เพื่อป้องกันการแก้ไขข้อมูลระหว่างทาง
+          </p>
+        </div>
+
         <button id="execute-btn" class="glow-button">เริ่มทำงาน</button>
 
         <div class="result-area">
@@ -180,6 +217,10 @@
           const action = document.querySelector(
             'input[name="action"]:checked'
           ).value;
+
+          // Get Security Params
+          const useSecurity = document.getElementById("use-security").checked;
+
           const resultBox = document.getElementById("result-output");
 
           if (!text || !keyword) {
@@ -199,14 +240,44 @@
                 keyword,
                 cipher_type: cipherType,
                 action,
+                use_security: useSecurity,
               }),
             });
 
             const data = await response.json();
 
+            // Reset States
+            resultBox.className = "result-box";
+
+            // Remove old badge if exists
+            const oldBadge = document.querySelector(".status-badge");
+            if (oldBadge) oldBadge.remove();
+
             if (response.ok) {
               resultBox.textContent = data.result;
               resultBox.classList.add("has-content");
+
+              // Status Badge Helper
+              const createBadge = (text, type) => {
+                const badge = document.createElement("span");
+                badge.className = `status-badge ${type}`;
+                badge.innerHTML = `${text}`;
+
+                // Add to result label area
+                const label = document.querySelector(".result-area label");
+                label.appendChild(badge);
+
+                // Trigger animation
+                requestAnimationFrame(() => badge.classList.add("visible"));
+              };
+
+              if (data.verified) {
+                resultBox.classList.add("verified");
+                createBadge("Verified (เชื่อถือได้)", "verified");
+              } else if (data.signed) {
+                resultBox.classList.add("signed");
+                createBadge("Signed (ลงลายมือชื่อแล้ว)", "signed");
+              }
             } else {
               resultBox.innerHTML = `<span class="error">${data.error}</span>`;
             }
