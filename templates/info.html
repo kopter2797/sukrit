@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Master | เข้าใจง่ายๆ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="background-globes">
+      <div class="globe globe-1"></div>
+      <div class="globe globe-2"></div>
+      <div class="globe globe-3"></div>
+    </div>
+
+    <div class="container">
+      <header>
+        <h1>คู่มือฉบับเข้าใจง่าย</h1>
+        <p>เปรียบเทียบ Vigenere vs Autokey แบบบ้านๆ</p>
+      </header>
+
+      <main class="glass-card">
+        <div class="info-section">
+          <h2>1. Vigenere Cipher (แบบดั้งเดิม)</h2>
+          <p>
+            <strong>เปรียบเหมือน:</strong> "การใช้แม่กุญแจดอกเดิมซ้ำๆ" <br />
+            สมมติคุณมีแม่กุญแจอยู่ 3 ดอก (A, B, C) แต่บ้านคุณมีห้อง 10 ห้อง
+            คุณก็ต้องใช้แม่กุญแจวนไป A, B, C, A, B, C...
+          </p>
+          <div class="code-example">
+            <p>ข้อความ: HELLO WORLD</p>
+            <p>คีย์: KEYKE YKEYK</p>
+          </div>
+          <p class="weakness">
+            <strong>จุดอ่อน:</strong> ถ้าโจรสังเกตดีๆ
+            จะเห็นว่าแม่กุญแจถูกใช้ซ้ำเป็นรอบๆ (ทุก 3 ห้อง)
+            ทำให้เดาได้ง่ายว่าดอกต่อไปคืออะไร
+          </p>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="info-section">
+          <h2>2. Autokey Cipher (แบบต่อเนื่อง)</h2>
+          <p>
+            <strong>เปรียบเหมือน:</strong> "การวิ่งผลัด (Relay Race)" <br />
+            นักวิ่งไม้แรกคือ "กุญแจลับ" ที่เราตั้งไว้... แต่หลังจากนั้น
+            <strong>"ตัวอักษรของข้อความเราเอง"</strong>
+            จะกลายเป็นคนรับไม้ต่อและวิ่งเป็นกุญแจให้ตัวถัดไปเรื่อยๆ
+          </p>
+          <div class="code-example">
+            <p>ข้อความ: HELLO WORLD</p>
+            <p>
+              คีย์: KEY<span style="color: var(--success)">HELLO WORLD</span>
+            </p>
+            <p style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.5rem">
+              (สังเกตว่าข้อความ HELLO... ถูกนำมาต่อท้าย KEY เพื่อใช้เป็นกุญแจ)
+            </p>
+          </div>
+          <div
+            style="
+              background: rgba(234, 179, 8, 0.1);
+              border: 1px solid rgba(234, 179, 8, 0.3);
+              border-radius: 8px;
+              padding: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <p style="color: #fca5a5; margin: 0; font-weight: 600">
+              ⚠️ เข้าใจผิดบ่อย: เรายัง "ต้องใช้" คีย์เวิร์ด (Keyword) นะครับ!
+            </p>
+            <p style="color: #d1d5db; margin: 0.5rem 0 0 0; font-size: 0.9rem">
+              คีย์เวิร์ดจะเป็นตัวเริ่มสตาร์ท (Primer) ช่วงแรก ถ้าไม่มีคีย์เวิร์ด
+              ก็จะไม่มีตัวอะไรไปเริ่มไขรหัสตัวแรกได้ครับ
+            </p>
+          </div>
+          <p class="strength">
+            <strong>จุดแข็ง:</strong> เพราะเราเอาข้อความมาทำเป็นกุญแจ
+            ทำให้กุญแจยาวไม่สิ้นสุดและไม่ซ้ำเดิม โจรจึงจับทางไม่ได้ว่า
+            "รอบการซ้ำ" อยู่ตรงไหน
+          </p>
+        </div>
+
+        <div class="action-area" style="margin-top: 3rem; text-align: center">
+          <a href="/" class="glow-button auto-width">ลองเล่นเลย</a>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

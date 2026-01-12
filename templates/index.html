@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Master | เครื่องมือเข้ารหัสขั้นสูง</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="background-globes">
+      <div class="globe globe-1"></div>
+      <div class="globe globe-2"></div>
+      <div class="globe globe-3"></div>
+    </div>
+
+    <div class="container">
+      <header>
+        <h1>Crypto Master</h1>
+        <p>เครื่องมือเข้ารหัสลับแบบสมมาตร</p>
+        <div style="margin-top: 1rem">
+          <a href="/info" class="text-link">เรียนรู้ความแตกต่าง ></a>
+        </div>
+      </header>
+
+      <main class="glass-card">
+        <div class="form-group full-width">
+          <label for="text-input">
+            ข้อความนำเข้า (Input Text)
+            <span
+              style="color: var(--error); font-size: 0.8em; margin-left: 8px"
+              >*(รับเฉพาะภาษาอังกฤษ A-Z)*</span
+            >
+          </label>
+          <textarea
+            id="text-input"
+            placeholder="กรอกข้อความภาษาอังกฤษที่ต้องการ..."
+          ></textarea>
+        </div>
+
+        <div class="controls-grid">
+          <div class="form-group">
+            <label for="keyword-input">รหัสผ่าน (Keyword)</label>
+            <input type="text" id="keyword-input" placeholder="กุญแจลับ" />
+          </div>
+
+          <div class="form-group">
+            <label>วิธีการ (Method)</label>
+            <div class="toggle-switch-container">
+              <input
+                type="radio"
+                name="cipher_type"
+                id="cipher-vigenere"
+                value="vigenere"
+                checked
+              />
+              <label for="cipher-vigenere" class="toggle-label">Vigenere</label>
+
+              <input
+                type="radio"
+                name="cipher_type"
+                id="cipher-autokey"
+                value="autokey"
+              />
+              <label for="cipher-autokey" class="toggle-label">Autokey</label>
+
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>การดำเนินการ (Action)</label>
+            <div class="toggle-switch-container">
+              <input
+                type="radio"
+                name="action"
+                id="action-encrypt"
+                value="encrypt"
+                checked
+              />
+              <label for="action-encrypt" class="toggle-label">เข้ารหัส</label>
+
+              <input
+                type="radio"
+                name="action"
+                id="action-decrypt"
+                value="decrypt"
+              />
+              <label for="action-decrypt" class="toggle-label">ถอดรหัส</label>
+
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Section -->
+        <!-- Security Section -->
+        <div class="security-section">
+          <div class="security-header">
+            <label for="use-security" class="security-label">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2L3 7V12C3 17.52 7.73 22 12 22C16.27 22 21 17.52 21 12V7L12 2ZM12 11.99H7V10H12V7.5L16 11L12 14.5V11.99Z"
+                  fill="currentColor"
+                />
+              </svg>
+              เปิดใช้ระบบความปลอดภัย (Auto Integrity Check)
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="use-security" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p
+            style="
+              color: var(--text-muted);
+              font-size: 0.85rem;
+              margin: 0;
+              padding-left: 2px;
+              margin-bottom: 1rem;
+            "
+          >
+            เพิ่มการตรวจสอบความถูกต้องของข้อมูลด้วย HMAC
+            เพื่อป้องกันการแก้ไขข้อมูลระหว่างทาง
+          </p>
+
+          <!-- Recovery Section (New) -->
+          <div
+            class="security-header"
+            style="
+              border-top: 1px solid rgba(255, 255, 255, 0.1);
+              padding-top: 1rem;
+            "
+          >
+            <label for="use-recovery" class="security-label">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 8l-4 4h3c0 3.31-2.69 6-6 6a5.87 5.87 0 0 1-2.8-.7l-1.46 1.46A7.93 7.93 0 0 0 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46A7.93 7.93 0 0 0 12 4C7.58 4 4 7.58 4 12H1l4 4 4-4H6z"
+                  fill="currentColor"
+                />
+              </svg>
+              ระบบกู้คืนข้อมูล (Data Recovery)
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="use-recovery" disabled />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <p
+            style="
+              color: var(--text-muted);
+              font-size: 0.85rem;
+              margin: 0;
+              padding-left: 2px;
+            "
+          >
+            ส่งข้อมูล 2 ชุด (Backup) เพื่อกู้คืนหากถูกโจมตี
+            (ต้องเปิดระบบความปลอดภัยก่อน)
+          </p>
+        </div>
+
+        <button id="execute-btn" class="glow-button">เริ่มทำงาน</button>
+
+        <div class="result-area">
+          <label>ผลลัพธ์ (Output)</label>
+          <div class="result-box" id="result-container">
+            <div id="result-output">
+              <span class="placeholder">ผลลัพธ์จะแสดงที่นี่...</span>
+            </div>
+            <button id="copy-btn" class="icon-button" title="คัดลอก">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 4V16C8 17.1046 8.89543 18 10 18H18C19.1046 18 20 17.1046 20 16V7.24264C20 6.71221 19.7893 6.20357 19.4142 5.82843L16.1716 2.58579C15.7964 2.21071 15.2878 2 14.7574 2H10C8.89543 2 8 2.89543 8 4Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M16 18V20C16 21.1046 15.1046 22 14 22H6C4.89543 22 4 21.1046 4 20V8C4 6.89543 4.89543 6 6 6H8"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const updateButtonText = () => {
+        const cipherType = document.querySelector(
+          'input[name="cipher_type"]:checked'
+        ).value;
+        const action = document.querySelector(
+          'input[name="action"]:checked'
+        ).value;
+        const btn = document.getElementById("execute-btn");
+
+        const cipherName = cipherType === "vigenere" ? "Vigenere" : "Autokey";
+        const actionName = action === "encrypt" ? "เข้ารหัส" : "ถอดรหัส";
+
+        btn.innerHTML = `${actionName}ด้วย ${cipherName}`;
+
+        // Adjust glow color
+        if (action === "encrypt") {
+          btn.style.background = "linear-gradient(135deg, #00c6ff, #0072ff)";
+        } else {
+          btn.style.background = "linear-gradient(135deg, #f093fb, #f5576c)";
+        }
+      };
+
+      // Toggle Logic: Recovery depends on Security
+      const securityCheckbox = document.getElementById("use-security");
+      const recoveryCheckbox = document.getElementById("use-recovery");
+
+      securityCheckbox.addEventListener("change", (e) => {
+        if (e.target.checked) {
+          recoveryCheckbox.disabled = false;
+        } else {
+          recoveryCheckbox.disabled = true;
+          recoveryCheckbox.checked = false;
+        }
+      });
+
+      // Add listeners
+      document
+        .querySelectorAll('input[name="cipher_type"], input[name="action"]')
+        .forEach((input) => {
+          input.addEventListener("change", updateButtonText);
+        });
+
+      // Initialize button text
+      updateButtonText();
+
+      document
+        .getElementById("execute-btn")
+        .addEventListener("click", async () => {
+          const text = document.getElementById("text-input").value;
+          const keyword = document.getElementById("keyword-input").value;
+          const cipherType = document.querySelector(
+            'input[name="cipher_type"]:checked'
+          ).value;
+          const action = document.querySelector(
+            'input[name="action"]:checked'
+          ).value;
+
+          // Get Security Params
+          const useSecurity = document.getElementById("use-security").checked;
+          const useRecovery = document.getElementById("use-recovery").checked;
+
+          const resultContainer = document.getElementById("result-container");
+          const resultOutput = document.getElementById("result-output");
+
+          if (!text || !keyword) {
+            resultOutput.innerHTML =
+              '<span class="error">กรุณากรอกทั้งข้อความและคีย์เวิร์ด!</span>';
+            return;
+          }
+
+          resultOutput.innerHTML =
+            '<span class="loading">กำลังประมวลผล...</span>';
+
+          try {
+            const response = await fetch("/process", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text,
+                keyword,
+                cipher_type: cipherType,
+                action,
+                use_security: useSecurity,
+                use_recovery: useRecovery,
+              }),
+            });
+
+            const data = await response.json();
+
+            // Reset States
+            resultContainer.className = "result-box";
+
+            // Remove old badges
+            document
+              .querySelectorAll(".status-badge")
+              .forEach((e) => e.remove());
+
+            if (response.ok) {
+              // Store the full result for copying
+              let fullResultToCopy = "";
+
+              // Show the "Display" result (clean text), but keep full result for copy
+              // If display_result exists (encryption), use it.
+              // If not (decryption), use result.
+              const textToShow = data.display_result || data.result;
+              fullResultToCopy = data.result;
+
+              resultOutput.textContent = textToShow;
+              resultContainer.dataset.fullResult = fullResultToCopy; // Store in dataset as backup
+
+              resultContainer.classList.add("has-content");
+
+              // Status Badge Helper
+              const createBadge = (text, type) => {
+                const badge = document.createElement("span");
+                badge.className = `status-badge ${type}`;
+                badge.innerHTML = `${text}`;
+
+                // Add to result label area
+                const label = document.querySelector(".result-area label");
+                label.appendChild(badge);
+
+                // Trigger animation
+                requestAnimationFrame(() => badge.classList.add("visible"));
+              };
+
+              if (data.recovery_status) {
+                // Special badge for recovery
+                if (data.recovery_status.startsWith("Normal")) {
+                  createBadge("Verified (ปกติ)", "verified");
+                } else if (data.recovery_status.startsWith("Recovered")) {
+                  createBadge("⚠️ กู้คืนข้อมูลสำเร็จ (Recovered)", "warning");
+                  // Add specific style for warning badge
+                  const badgeElement = document.querySelector(
+                    ".status-badge.warning"
+                  );
+                  if (badgeElement) {
+                    badgeElement.style.background = "#ff9800"; // Orange
+                    badgeElement.style.boxShadow = "0 0 10px #ff9800";
+                  }
+                }
+              } else if (data.verified) {
+                resultContainer.classList.add("verified");
+                createBadge("Verified (เชื่อถือได้)", "verified");
+              } else if (data.signed) {
+                resultContainer.classList.add("signed");
+                createBadge("Signed (ลงลายมือชื่อแล้ว)", "signed");
+              }
+            } else {
+              resultOutput.innerHTML = `<span class="error">${data.error}</span>`;
+            }
+          } catch (error) {
+            resultOutput.innerHTML = `<span class="error">การเชื่อมต่อผิดพลาด: ${error.message}</span>`;
+          }
+        });
+
+      document.getElementById("copy-btn").addEventListener("click", () => {
+        // Copy the FULL result, not just what's displayed
+        const resultContainer = document.getElementById("result-container");
+        const resultOutput = document.getElementById("result-output");
+
+        const fullResult =
+          resultContainer.dataset.fullResult || resultOutput.textContent;
+
+        if (fullResult && !fullResult.includes("ผลลัพธ์จะแสดงที่นี่...")) {
+          navigator.clipboard.writeText(fullResult);
+          const btn = document.getElementById("copy-btn");
+          btn.classList.add("copied");
+          setTimeout(() => btn.classList.remove("copied"), 2000);
+        }
+      });
+    </script>
+  </body>
+</html>
